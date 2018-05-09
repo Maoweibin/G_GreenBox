@@ -4,14 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.drawable.Drawable;
-import android.nfc.Tag;
 import android.os.Bundle;
-import android.provider.CalendarContract;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -19,13 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.task.dd.greenbox.MainActivity;
-import com.task.dd.greenbox.MyApplication;
 import com.task.dd.greenbox.R;
 import com.task.dd.greenbox.bean.BeanLab;
 import com.task.dd.greenbox.database.DBSchema;
+import com.task.dd.greenbox.tool.Util;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -141,7 +137,7 @@ public class LoginActivity extends AppCompatActivity {
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(getApplicationContext(),"网络问题",Toast.LENGTH_SHORT).show();
+                                Util.showToast(getApplicationContext(),"网络好像有问题~");
                             }
                         });
                     }
@@ -163,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Toast.makeText(getApplicationContext(),"账号密码错误",Toast.LENGTH_SHORT).show();
+                                        Util.showToast(getApplicationContext(),"账号密码错误~");
                                     }
                                 });
                             }
@@ -190,17 +186,17 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-
-                /*Cursor cursor=beanLab.queryPhone(DBSchema.Table.NAME,new String[]{"phone,password"},"phone=? and password=?",new String[]{user_phone,user_password});
+                //TODO:添加这个判断到注册页面
+                Cursor cursor=beanLab.queryPhone(DBSchema.Table.NAME,new String[]{"phone,password"},"phone=? and password=?",new String[]{user_phone,user_password});
                 if (user_password.equals("")||user_phone.equals("")){
-                    Toast.makeText(getApplication(),"用户名和密码不能为空",Toast.LENGTH_LONG).show();
+                    Util.showToast(getApplicationContext(),"手机号和密码不能为空~");
                 }else if(cursor.getCount()==1){//有且只有符合要求的cursor才能进入。
                     Intent intent=newIntent(getApplicationContext(), MainActivity.class,user_phone);
                     startActivity(intent);
                     LoginActivity.this.finish();
                 }else{
-                    Toast.makeText(getApplication(),"用户名或者密码不正确",Toast.LENGTH_LONG).show();
-                }*/
+                    Util.showToast(getApplicationContext(),"手机号或者密码不正确~");
+                }
 
             }
         });
@@ -215,14 +211,14 @@ public class LoginActivity extends AppCompatActivity {
         reg_qq.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"qq登录",Toast.LENGTH_SHORT).show();
+                Util.showToast(getApplicationContext(),"QQ登录暂未开放~");
 
             }
         });
         reg_weibo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(),"微博登录",Toast.LENGTH_SHORT).show();
+                Util.showToast(getApplicationContext(),"微博登录暂未开放~");
             }
         });
         //用户协议点击

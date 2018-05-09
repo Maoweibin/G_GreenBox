@@ -1,40 +1,32 @@
 package com.task.dd.greenbox;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
-import android.widget.Toolbar;
 
-import com.bumptech.glide.Glide;
-import com.mob.commons.SMSSDK;
-import com.task.dd.greenbox.Activity.ComActivity;
+import com.mob.MobSDK;
 import com.task.dd.greenbox.Activity.LoginActivity;
-import com.task.dd.greenbox.Fragment.ComFragment;
 import com.task.dd.greenbox.Fragment.KnowFragment;
 import com.task.dd.greenbox.Fragment.PotFragment;
 import com.task.dd.greenbox.Fragment.SetFragment;
 import com.task.dd.greenbox.Fragment.TestFragment;
-
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -82,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cn.smssdk.SMSSDK.initSDK(this,"","");
+        MobSDK.init(this,"","");
         ZXingLibrary.initDisplayOpinion(this);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);//在主题中已经申明不要标题了 可是还是会显示 ，只能再次申明了
         setContentView(R.layout.activity_main);

@@ -56,7 +56,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textColor="#4dda65"
-                android:hint="用户名"
+                android:hint="手机号码"
                 android:id="@+id/edit_phone"
                 android:textSize="18sp"
                 android:layout_alignParentBottom="true"

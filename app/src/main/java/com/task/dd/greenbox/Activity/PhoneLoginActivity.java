@@ -1,18 +1,15 @@
 package com.task.dd.greenbox.Activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.widget.Toast;
 
-import com.mob.commons.SMSSDK;
+import com.mob.MobSDK;
 import com.task.dd.greenbox.MainActivity;
-import com.task.dd.greenbox.adapter.KnowAdapter;
 import com.task.dd.greenbox.bean.BeanLab;
 import com.task.dd.greenbox.database.DBSchema;
 
@@ -32,7 +29,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        cn.smssdk.SMSSDK.initSDK(this,"1c1a35d0b7304","9a3d033680dc6d0e4c0788c7831797fa");
+        MobSDK.init(this,"25ab1dd39eb22","16d823f2b664b9a2809ebc034091dc54");
         beanLab=BeanLab.get(getApplicationContext());
         RegisterPage registerPage = new RegisterPage();
         registerPage.setRegisterCallback(new EventHandler() {

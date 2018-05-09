@@ -2,116 +2,124 @@
 
 
 <!--当要在布局文件设置toolbar的时候要用到灰色的那句话不然不生效-->
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:toolbar="http://schemas.android.com/apk/res-auto"
 
-        xmlns:toolbar="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:fitsSystemWindows="true"
-        android:id="@+id/activity_main"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/activity_main"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/main_my"
+              android:fitsSystemWindows="true"
 
-        tools:context="com.task.dd.greenbox.MainActivity"
-        android:background="@color/main_my"
-        >
+              android:orientation="vertical"
+              tools:context="com.task.dd.greenbox.MainActivity"
+    >
+
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/toolbar"
-        android:theme="@style/Theme.ToolBar"
+        android:background="@color/main_my"
         android:gravity="right"
-        android:background="@color/main_my">
+        android:theme="@style/Theme.ToolBar">
+
         <ImageView
+            android:id="@+id/iv_search"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="100dp"
-            android:scaleY="0.8"
-            android:scaleX="0.8"
             android:clickable="true"
-            android:id="@+id/iv_search"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             android:src="@mipmap/icon_search"/>
+
         <ImageView
+            android:id="@+id/iv_scan"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginLeft="35dp"
-            android:scaleY="0.8"
-            android:scaleX="0.8"
-            android:id="@+id/iv_scan"
             android:clickable="true"
+            android:scaleX="0.8"
+            android:scaleY="0.8"
             android:src="@mipmap/icon_scan"/>
 
     </android.support.v7.widget.Toolbar>
 
-        <FrameLayout
-            android:id="@+id/frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/white"
-            android:layout_weight="1"
-            >
+    <FrameLayout
+        android:id="@+id/frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/white"
+        >
 
 
-        </FrameLayout>
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1px"
-            android:background="#000000"
-            />
+    </FrameLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="#000000"
+        />
 
     <LinearLayout
-        android:background="#fefefe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#fefefe"
         android:orientation="horizontal"
         >
+
         <RadioButton
             android:id="@+id/pot_button"
             android:layout_width="0dp"
-            android:layout_marginTop="3dp"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:layout_weight="1"
-            android:gravity="center"
             android:button="@null"
-            android:textColor="@drawable/color_radiobutton"
             android:drawableTop="@drawable/pot_button"
+            android:gravity="center"
             android:text="花盆"
+            android:textColor="@drawable/color_radiobutton"
             />
+
         <RadioButton
             android:id="@+id/com_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
             android:layout_marginTop="3dp"
+            android:layout_weight="1"
             android:button="@null"
-            android:textColor="@drawable/color_radiobutton"
             android:drawableTop="@drawable/com_buttton"
+            android:gravity="center"
             android:text="社区"
+            android:textColor="@drawable/color_radiobutton"
             />
+
         <RadioButton
             android:id="@+id/know_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_marginTop="3dp"
-            android:gravity="center"
+            android:layout_weight="1"
             android:button="@null"
-            android:textColor="@drawable/color_radiobutton"
             android:drawableTop="@drawable/konw_button"
+            android:gravity="center"
             android:text="知识库"
+            android:textColor="@drawable/color_radiobutton"
             />
+
         <RadioButton
             android:id="@+id/set_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:button="@null"
             android:layout_marginTop="3dp"
-            android:textColor="@drawable/color_radiobutton"
+            android:layout_weight="1"
+            android:button="@null"
             android:drawableTop="@drawable/set_button"
+            android:gravity="center"
             android:text="我的"
+            android:textColor="@drawable/color_radiobutton"
             />
 
     </LinearLayout>
