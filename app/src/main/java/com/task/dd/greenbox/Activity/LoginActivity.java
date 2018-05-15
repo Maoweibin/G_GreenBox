@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -155,11 +156,13 @@ public class LoginActivity extends AppCompatActivity {
                             JSONObject id_jsonObject=jsonArray.getJSONObject(0);
                             id =id_jsonObject.getString("id");
 
+                            Log.e("result_data",jsonObject.getString("data"));
+
                             if (result.equals("0")){
                                 runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        Util.showToast(getApplicationContext(),"账号密码错误~");
+//                                        Util.showToast(getApplicationContext(),"账号或者密码错误");
                                     }
                                 });
                             }
@@ -179,23 +182,21 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                           // Toast.makeText(getApplicationContext(),e.toString(),Toast.LENGTH_LONG).show();
+                            Util.showToast(getApplicationContext(),"好像出错了~");
                         }
-
-
                     }
                 });
 
                 //TODO:添加这个判断到注册页面
                 Cursor cursor=beanLab.queryPhone(DBSchema.Table.NAME,new String[]{"phone,password"},"phone=? and password=?",new String[]{user_phone,user_password});
                 if (user_password.equals("")||user_phone.equals("")){
-                    Util.showToast(getApplicationContext(),"手机号和密码不能为空~");
+                    Util.showToast(getApplicationContext(),"手机号和密码不能为空");
                 }else if(cursor.getCount()==1){//有且只有符合要求的cursor才能进入。
                     Intent intent=newIntent(getApplicationContext(), MainActivity.class,user_phone);
                     startActivity(intent);
                     LoginActivity.this.finish();
                 }else{
-                    Util.showToast(getApplicationContext(),"手机号或者密码不正确~");
+                    Util.showToast(getApplicationContext(),"手机号或者密码不正确");
                 }
 
             }

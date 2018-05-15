@@ -1,15 +1,19 @@
 package com.task.dd.greenbox.Activity;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.View;
 import android.view.Window;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 
 import com.task.dd.greenbox.R;
+
+import static android.view.KeyEvent.KEYCODE_BACK;
 
 /**
  * Created by dd on 2017/3/11.
@@ -17,6 +21,7 @@ import com.task.dd.greenbox.R;
 
 public class WebActivity extends AppCompatActivity {
     private WebView webView;
+    private ImageView imageView;
     private String url;
     private android.support.v7.widget.Toolbar toolbar;
     private static final  String EXTRA_WEB="com.task.dd.greenbox.Fragment.KnowFragment";
@@ -28,6 +33,12 @@ public class WebActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.weblayout);
         toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
+        imageView = (ImageView) findViewById(R.id.iv_share);
+        imageView.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+            }
+        });
 
         //toolbar.setNavigationIcon(R.mipmap.ic_greedbox80xr);
         //toolbar.setTitle("GreenBox");
@@ -46,5 +57,14 @@ public class WebActivity extends AppCompatActivity {
         });
         WebSettings settings=webView.getSettings();
         settings.setJavaScriptEnabled(false);
+
     }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 }

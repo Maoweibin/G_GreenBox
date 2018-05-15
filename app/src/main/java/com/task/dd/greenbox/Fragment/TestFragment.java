@@ -6,26 +6,20 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bartoszlipinski.recyclerviewheader.RecyclerViewHeader;
-import com.task.dd.greenbox.Activity.ComActivity;
+import com.task.dd.greenbox.Activity.Moment;
 import com.task.dd.greenbox.Activity.MomentAddActivity;
 import com.task.dd.greenbox.R;
-import com.task.dd.greenbox.Activity.Moment;
 import com.task.dd.greenbox.adapter.MomentAdapter;
-import com.task.dd.greenbox.asyntask.NewComAsynTask;
 import com.task.dd.greenbox.bean.ComBean;
 import com.task.dd.greenbox.jsonpull.ComJson;
 
@@ -34,11 +28,8 @@ import org.json.JSONException;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import cn.bingoogolapple.androidcommon.adapter.BGARecyclerViewAdapter;
-import cn.bingoogolapple.androidcommon.adapter.BGAViewHolderHelper;
 import cn.bingoogolapple.photopicker.activity.BGAPhotoPreviewActivity;
 import cn.bingoogolapple.photopicker.imageloader.BGARVOnScrollListener;
 import cn.bingoogolapple.photopicker.widget.BGANinePhotoLayout;
@@ -121,7 +112,7 @@ public class TestFragment extends Fragment implements EasyPermissions.Permission
                     public void run() {
 
                         mMomentRv.setAdapter(mMomentAdapter);
-                        mMomentAdapter.setData(moment.getMoments());//Moment集合
+//                        mMomentAdapter.setData(moment.getMoments());//Moment集合    //TODO：不注释掉会闪退
                     }
                 });
 

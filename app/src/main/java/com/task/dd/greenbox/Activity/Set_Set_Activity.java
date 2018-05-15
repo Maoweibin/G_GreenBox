@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.task.dd.greenbox.R;
 
@@ -18,6 +19,8 @@ public class Set_Set_Activity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
+        TextView centerTitle = (TextView) findViewById(R.id.centerTitle);
+        centerTitle.setText("系统设置");
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.layout_set);

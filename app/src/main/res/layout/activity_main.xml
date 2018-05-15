@@ -32,7 +32,8 @@
             android:clickable="true"
             android:scaleX="0.8"
             android:scaleY="0.8"
-            android:src="@mipmap/icon_search"/>
+            android:src="@mipmap/icon_search"
+            />
 
         <ImageView
             android:id="@+id/iv_scan"

@@ -37,6 +37,12 @@
             android:windowSoftInputMode="stateHidden|adjustResize">
         </activity>
 
+        <activity
+            android:name=".Activity.SearchWebActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateHidden|adjustResize">
+        </activity>
+
         <activity android:name=".Activity.PhoneLoginActivity"
             >
 
@@ -96,7 +102,10 @@
         <activity android:name=".Activity.Set_Report_Activity">
 
         </activity>
-        <activity android:name=".Activity.Set_Set_Activity">
+        <activity android:name=".Activity.personal_center_Activity">
+
+        </activity>
+        <activity android:name=".Activity.about_me">
 
         </activity>
         <activity android:name=".Activity.Set_Message_Activity">

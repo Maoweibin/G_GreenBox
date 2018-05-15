@@ -18,11 +18,12 @@ import android.widget.RadioButton;
 import android.widget.Toast;
 
 import com.mob.MobSDK;
-import com.task.dd.greenbox.Activity.LoginActivity;
+import com.task.dd.greenbox.Activity.SearchWebActivity;
 import com.task.dd.greenbox.Fragment.KnowFragment;
 import com.task.dd.greenbox.Fragment.PotFragment;
 import com.task.dd.greenbox.Fragment.SetFragment;
 import com.task.dd.greenbox.Fragment.TestFragment;
+import com.task.dd.greenbox.tool.Util;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
@@ -86,6 +87,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setButton= (RadioButton) findViewById(R.id.set_button);
         knowButton= (RadioButton) findViewById(R.id.know_button);
         searchImageView= (ImageView) findViewById(R.id.iv_search);
+        searchImageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, SearchWebActivity.class);
+                startActivity(intent);
+            }
+        });
         scanImageView= (ImageView) findViewById(R.id.iv_scan);
         scanImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar.setTitle("GreenBox");
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
         //尝试销毁登录activity
-        LoginActivity.instance.finish();
+//        LoginActivity.instance.finish();  //TODO：不注释掉就会闪退
 
 
 
@@ -153,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     //result 代表的是扫描的结果 ，再次应该直接异步然后起动线程
 
                 } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(MainActivity.this, "解析二维码失败，检查网络", Toast.LENGTH_LONG).show();
+                    Util.showToast(getApplicationContext(),"注册失败，请检查您的网络");
                 }
             }
         }

@@ -1,5 +1,12 @@
 <resources>
 
+    <!--侧滑菜单分割线样式-->
+    <style name="ViewLineNav">
+        <item name="android:layout_height">1px</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:background">#E0E0E0</item>
+    </style>
+
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -26,8 +33,13 @@
         <!--Status bar color-->
     </style>
 
+    <style name="AppTheme.NoTitle">
+        <item name="windowNoTitle">true</item>
+    </style>
+
     <style name="Theme.ToolBar" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="actionOverflowButtonStyle">@style/ActionButton.Overflow</item>
+
     </style>
 <!--通过重写这两个，把最右边的三点替换成自定义的三点-->
     <style name="ActionButton.Overflow" parent="android:style/Widget.Holo.Light.ActionButton.Overflow">

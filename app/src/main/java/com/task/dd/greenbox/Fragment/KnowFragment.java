@@ -1,7 +1,5 @@
 package com.task.dd.greenbox.Fragment;
 
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,17 +9,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.task.dd.greenbox.Activity.WebActivity;
-import com.task.dd.greenbox.MainActivity;
 import com.task.dd.greenbox.R;
 import com.task.dd.greenbox.adapter.KnowAdapter;
 import com.task.dd.greenbox.adapter.KnowVPAdapter;
-
-import android.widget.AdapterView.OnItemClickListener;
-
 import com.task.dd.greenbox.bean.KnowBean;
 import com.task.dd.greenbox.jsonpull.NewKnowJson;
 
@@ -203,7 +198,7 @@ public class KnowFragment extends Fragment implements OnItemClickListener,KnowAd
             knowBean=knowJson.knowPull(getData());
            /* Toast.makeText(getContext(), "的item被点击了！，点击的位置是-->" + position+knowBean.getListKnowBean().get(position-2).getId(), Toast.LENGTH_SHORT).show();*/
             Intent i=new Intent(getActivity(), WebActivity.class);
-            String url=knowBean.getListKnowBean().get(position-2).getUrl();
+            String url=knowBean.getListKnowBean().get(position-2).getUrl();   //闪退
             i.putExtra(EXTRA_WEB,url);
             startActivity(i);
 
@@ -213,8 +208,6 @@ public class KnowFragment extends Fragment implements OnItemClickListener,KnowAd
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
-
     }
 
     @Override

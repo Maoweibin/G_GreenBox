@@ -6,12 +6,12 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
 import com.mob.MobSDK;
 import com.task.dd.greenbox.MainActivity;
 import com.task.dd.greenbox.bean.BeanLab;
 import com.task.dd.greenbox.database.DBSchema;
+import com.task.dd.greenbox.tool.Util;
 
 import java.util.HashMap;
 
@@ -40,10 +40,10 @@ public class PhoneLoginActivity extends AppCompatActivity {
                     HashMap<String,Object> phoneMap = (HashMap<String, Object>) data;
                     String country = (String) phoneMap.get("country");
                     String phone = (String) phoneMap.get("phone");
-                    //应为用了第三方验证码登录 ，没有办法在获得手机号码之前进行是数据库的查询。
+                    //应用了第三方验证码登录 ，没有办法在获得手机号码之前进行是数据库的查询。
                     Cursor cursor= beanLab.queryPhone(DBSchema.Table.NAME,new String[]{"phone"},"phone=?",new String[]{phone});
-                    if (cursor.getCount()==1){
-                        Toast.makeText(getApplicationContext(),"已有账号，直接登录",Toast.LENGTH_SHORT).show();
+                    if (cursor.getCount() >= 1){
+                        Util.showToast(getApplicationContext(),"手机号已注册，直接登录");
 
                         Intent i=newIntent(PhoneLoginActivity.this,MainActivity.class,phone);
                         startActivity(i);

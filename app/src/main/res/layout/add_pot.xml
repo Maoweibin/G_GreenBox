@@ -83,7 +83,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textSize="15sp"
-                    android:text="点击添加头像"
+                    android:text="点击添加图标"
                     android:id="@+id/tv_tips_add_pot"
                     android:textColor="#A2997E"
                     android:layout_gravity="center"
@@ -110,6 +110,7 @@
                     android:layout_gravity="center"
                     android:layout_margin="120dp"
                     android:layout_height="50dp"
+                    android:gravity="center"
                     android:text="植物昵称"
                     android:background="@drawable/edit_round"
                     android:id="@+id/ed_pot_name" />

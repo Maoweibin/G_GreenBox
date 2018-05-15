@@ -4,12 +4,11 @@
 
     android:layout_height="match_parent">
 
-
     <RelativeLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:background="@color/black"
-        android:layout_height="55dp">
+        android:background="@color/main_my"
+        android:layout_height="65dp">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -28,7 +27,7 @@
             android:layout_height="wrap_content"
             android:textColor="#FFFFFf"
             android:text="私信"
-            android:paddingTop="10dp"
+            android:paddingTop="15dp"
             android:textSize="20sp"
             android:id="@+id/textView"
             android:layout_alignTop="@+id/icon_back"

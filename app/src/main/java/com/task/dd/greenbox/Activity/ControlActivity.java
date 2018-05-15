@@ -5,12 +5,10 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.task.dd.greenbox.R;
 import com.task.dd.greenbox.bean.Pot_Message;
@@ -18,6 +16,7 @@ import com.task.dd.greenbox.bean.SingleBean;
 import com.task.dd.greenbox.jsonpull.PotMessageJson;
 import com.task.dd.greenbox.tool.GradientImageView;
 import com.task.dd.greenbox.tool.IOSSwitchView;
+import com.task.dd.greenbox.tool.Util;
 
 import org.json.JSONException;
 
@@ -49,7 +48,7 @@ public class ControlActivity extends Activity{
     private GradientImageView iv_water;//水图标
     private GradientImageView iv_water_back;//水图标背景
     private GradientImageView iv_sunshine;//阳光图片
-    private GradientImageView iv_sunshine_back;//
+    private GradientImageView iv_sunshine_back;//阳光背景
     private ImageView iv_recode;//记录图标
     private TextView tv_sun;
     private TextView tv_water;
@@ -132,7 +131,7 @@ public class ControlActivity extends Activity{
         Request request = new Request.Builder()
                 .url("http://api.yeelink.net/v1.0/device/354593/sensor/400901/datapoints")
                 .post(requestbody)
-                .addHeader("u-apikey", "0ad358217706ef3af6cbe7833a1835ba")
+                .addHeader("u-apikey", "16d823f2b664b9a2809ebc034091dc54")  //TODO：是否要换成自己的秘钥
                 .addHeader("cache-control", "no-cache")
                 .build();
        // Response response = client.newCall(request).execute();
@@ -144,7 +143,7 @@ public class ControlActivity extends Activity{
                 ControlActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"开关失效，请检查网络",Toast.LENGTH_LONG).show();
+                        Util.showToast(getApplicationContext(),"开关失效，请检查网络");
                     }
                 });
 
@@ -168,7 +167,7 @@ public class ControlActivity extends Activity{
                                 singlebean.getSwitch_list().set(0,"1");
                                 Log.i(TAG, "content: " +"访问失败，重置1" );
                             }
-                            Toast.makeText(getApplicationContext(),"点击太快，访问失败", Toast.LENGTH_LONG).show();
+                            Util.showToast(getApplicationContext(),"点击太快，访问失败");
                         }
                     });
                 }else if (code==200){
@@ -274,9 +273,9 @@ public class ControlActivity extends Activity{
                         @Override
                         public void onStateSwitched(boolean isOn) throws IOException {
                             if (isOn){
-                                Toast.makeText(getApplicationContext(),"水控制开启的状态开",Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"水控制开启的状态开");
                                 String light=singlebean.getSwitch_list().get(0);
-                                Toast.makeText(getApplicationContext(),"灯是"+light,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯是"+light);
                                 singlebean.getSwitch_list().set(1,"1");
                                 SetSwitch(light,"1");
 
@@ -285,8 +284,8 @@ public class ControlActivity extends Activity{
                                 String light=singlebean.getSwitch_list().get(0);
                                 SetSwitch(light,"0");
                                 singlebean.getSwitch_list().set(1,"0");
-                                Toast.makeText(getApplicationContext(),"灯是"+light,Toast.LENGTH_LONG).show();
-                                Toast.makeText(getApplicationContext(),"水控制开的状态关",Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯是"+light);
+                                Util.showToast(getApplicationContext(),"水控制开启的状态关");
 
                             }
                         }
@@ -299,19 +298,19 @@ public class ControlActivity extends Activity{
                         @Override
                         public void onStateSwitched(boolean isOn) throws IOException {
                             if (isOn){
-                                Toast.makeText(getApplicationContext(),"水控制关闭下执行打开",Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"水控制关闭下执行打开");
                                 //关闭下执行打开
                                 String light=singlebean.getSwitch_list().get(0);
                                 SetSwitch(light,"1");
                                 singlebean.getSwitch_list().set(1,"1");
-                                Toast.makeText(getApplicationContext(),"灯是"+light,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯是"+light);
                             }else{
                                 //关闭下执行关闭
-                                Toast.makeText(getApplicationContext(),"水控制关闭下执行关闭",Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"水控制关闭下执行关闭");
                                 String light=singlebean.getSwitch_list().get(0);
                                 SetSwitch(light,"0");
                                 singlebean.getSwitch_list().set(1,"0");
-                                Toast.makeText(getApplicationContext(),"灯是"+light,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯是"+light);
                             }
                         }
                     });
@@ -333,16 +332,16 @@ public class ControlActivity extends Activity{
                                 String water =singlebean.getSwitch_list().get(1);
                                 SetSwitch("1","0");
                                 singlebean.getSwitch_list().set(0,"1");
-                                Toast.makeText(getApplicationContext(),"灯控制开的状态开",Toast.LENGTH_LONG).show();
-                                Toast.makeText(getApplicationContext(),"水是"+water,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯控制开的状态开");
+                                Util.showToast(getApplicationContext(),"水是"+water);
 
                             }else {
                                 //开的状态关
                                 String water =singlebean.getSwitch_list().get(1);
                                 SetSwitch("0","0");
                                 singlebean.getSwitch_list().set(0,"0");
-                                Toast.makeText(getApplicationContext(),"灯控制开的状态关",Toast.LENGTH_LONG).show();
-                                Toast.makeText(getApplicationContext(),"水是"+water,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯控制开启的状态关");
+                                Util.showToast(getApplicationContext(),"水是"+water);
 
                             }
                         }
@@ -358,15 +357,15 @@ public class ControlActivity extends Activity{
                                 String water=singlebean.getSwitch_list().get(1);
                                 SetSwitch("1","0");
                                 singlebean.getSwitch_list().set(0,"1");
-                                Toast.makeText(getApplicationContext(),"灯控制关闭下打开",Toast.LENGTH_LONG).show();
-                                Toast.makeText(getApplicationContext(),"水是"+water,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯控制关闭下打开");
+                                Util.showToast(getApplicationContext(),"水是"+water);
                             }else {
                                 //关闭下关闭
                                 String water=singlebean.getSwitch_list().get(1);
                                 SetSwitch("0","0");
                                 singlebean.getSwitch_list().set(0,"0");
-                                Toast.makeText(getApplicationContext(),"灯控制关闭下关闭",Toast.LENGTH_LONG).show();
-                                Toast.makeText(getApplicationContext(),"水是"+water,Toast.LENGTH_LONG).show();
+                                Util.showToast(getApplicationContext(),"灯控制关闭下关闭");
+                                Util.showToast(getApplicationContext(),"水是"+water);
                             }
                         }
                     });
@@ -396,7 +395,7 @@ public class ControlActivity extends Activity{
                 //<sensor_id>是400693
                 .url("http://api.yeelink.net/v1.0/device/354593/sensor/400693/datapoints")
                 .get()
-                .addHeader("u-apikey", "0ad358217706ef3af6cbe7833a1835ba")
+                .addHeader("u-apikey", "16d823f2b664b9a2809ebc034091dc54")  //TODO：是否要换成自己的秘钥
                 .addHeader("cache-control", "no-cache")
                 .build();
         Call call= client.newCall(request);
@@ -406,7 +405,7 @@ public class ControlActivity extends Activity{
                 ControlActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"获取花盆传感器失败，检查网络",Toast.LENGTH_LONG).show();
+                        Util.showToast(getApplicationContext(),"获取花盆传感器失败，检查网络");
                     }
                 });
 
@@ -441,7 +440,7 @@ public class ControlActivity extends Activity{
         Request button_request = new Request.Builder()
                 .url("http://api.yeelink.net/v1.0/device/354593/sensor/400901/datapoints")
                 .get()
-                .addHeader("u-apikey", "0ad358217706ef3af6cbe7833a1835ba")
+                .addHeader("u-apikey", "16d823f2b664b9a2809ebc034091dc54")  //TODO：是否要换成自己的秘钥
                 .addHeader("cache-control", "no-cache")
                 .build();
         Call button_call=button.newCall(button_request);
@@ -451,7 +450,7 @@ public class ControlActivity extends Activity{
                 ControlActivity.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"获取按钮失败，检查网络",Toast.LENGTH_LONG).show();
+                        Util.showToast(getApplicationContext(),"获取按钮失败，检查网络");
                     }
                 });
 
@@ -494,7 +493,7 @@ public class ControlActivity extends Activity{
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
                        // Log.d(TAG, "onException: " + e.toString()+"  model:"+model+" isFirstResource: "+isFirstResource);
-                        Toast.makeText(getApplication(),"加载失败",Toast.LENGTH_LONG).show();
+                        Util.showToast(getApplicationContext(),"加载失败~");
                         imageView.setImageResource(R.mipmap.d);
                         return false;
                     }
@@ -516,7 +515,7 @@ public class ControlActivity extends Activity{
                 .url("http://api.yeelink.net/v1.0/device/354593/sensor/400698/photo/content")
                 //http://api.yeelink.net/v1.0/device/354593/sensor/400698/photo/content
                 .get()
-                .addHeader("u-apikey", "0ad358217706ef3af6cbe7833a1835ba")
+                .addHeader("u-apikey", "16d823f2b664b9a2809ebc034091dc54")  //TODO：是否要换成自己的秘钥
                 .addHeader("cache-control", "no-cache")
                 .build();
         Call call= client.newCall(request);
@@ -528,7 +527,7 @@ public class ControlActivity extends Activity{
                     public void run() {
                         //网络图片请求成功，更新到主线程的ImageView
 
-                        Toast.makeText(getApplication(),"加载失败",Toast.LENGTH_LONG).show();
+                        Util.showToast(getApplicationContext(),"加载失败~");
                     }
                 });
             }

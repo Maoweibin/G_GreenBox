@@ -39,7 +39,7 @@ repositories{
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    provided fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -53,8 +53,9 @@ dependencies {
     compile 'cn.bingoogolapple:bga-photopicker:1.2.3@aar'
     compile 'cn.bingoogolapple:bga-photopicker:latestVersion@aar'
     compile 'pub.devrel:easypermissions:0.2.1'
-    androidTestCompile 'junit:junit:4.12'
+    testCompile 'junit:junit:4.12'
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    testCompile 'org.testng:testng:6.9.6'
 }
