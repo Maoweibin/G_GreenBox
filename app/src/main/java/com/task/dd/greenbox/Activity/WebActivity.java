@@ -22,6 +22,7 @@ import static android.view.KeyEvent.KEYCODE_BACK;
 public class WebActivity extends AppCompatActivity {
     private WebView webView;
     private ImageView imageView;
+	private ImageView goBack;
     private String url;
     private android.support.v7.widget.Toolbar toolbar;
     private static final  String EXTRA_WEB="com.task.dd.greenbox.Fragment.KnowFragment";
@@ -33,10 +34,23 @@ public class WebActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.weblayout);
         toolbar= (android.support.v7.widget.Toolbar) findViewById(R.id.toolbar);
-        imageView = (ImageView) findViewById(R.id.iv_share);
+        imageView = (ImageView) findViewById(R.id.iv_refresh);
+		goBack = (ImageView) findViewById(R.id.iv_back);
+		goBack.setOnClickListener(new View.OnClickListener(){
+			@Override
+			public void onClick(View v) {
+				if(webView.canGoBack()){
+					webView.goBack();
+				}
+				else {
+					finish();
+				}
+			}
+		});
         imageView.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+				webView.reload();
             }
         });
 
@@ -55,8 +69,10 @@ public class WebActivity extends AppCompatActivity {
                 return super.shouldOverrideUrlLoading(view, request);
             }
         });
-        WebSettings settings=webView.getSettings();
-        settings.setJavaScriptEnabled(false);
+		WebSettings settings=webView.getSettings();
+		settings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK); //设置缓存
+		settings.setJavaScriptEnabled(true);//适应JavaScript
+		settings.setDomStorageEnabled(true);//适应Html5
 
     }
     public boolean onKeyDown(int keyCode, KeyEvent event) {

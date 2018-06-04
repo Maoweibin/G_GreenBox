@@ -57,5 +57,6 @@ dependencies {
     compile 'com.bartoszlipinski.recyclerviewheader:library:1.2.0'
     compile 'me.zhanghai.android.materialprogressbar:library:1.4.1'
     compile 'com.squareup.okhttp3:okhttp:3.7.0'
+    compile 'com.google.code.gson:gson:2.6.2'
     testCompile 'org.testng:testng:6.9.6'
 }

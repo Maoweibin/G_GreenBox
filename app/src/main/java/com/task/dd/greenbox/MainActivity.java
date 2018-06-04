@@ -114,13 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         toolbar.setNavigationIcon(R.mipmap.ic_greedbox80xr);
         toolbar.setTitle("GreenBox");
         toolbar.setTitleTextColor(getResources().getColor(android.R.color.white));
-        //尝试销毁登录activity
-//        LoginActivity.instance.finish();  //TODO：不注释掉就会闪退
 
-
-
-
-
+        
     }
     //设置监听器，case1-4处理监听事件
     @Override

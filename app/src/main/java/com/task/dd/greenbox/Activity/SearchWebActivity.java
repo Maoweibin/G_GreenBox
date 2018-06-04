@@ -39,11 +39,11 @@ public class SearchWebActivity extends AppCompatActivity{
 		url="http://www.huabaike.com";
 
 		webView= (WebView) findViewById(R.id.searchwebview);
-		imageView = (ImageView) findViewById(R.id.iv_refresh);
+		imageView = (ImageView) findViewById(R.id.web_refresh);
 		imageView.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Util.showToast(getApplicationContext(),"重新加载");
+				Util.showToast(getApplicationContext(),"正在刷新");
 				webView.reload();
 			}
 		});
@@ -74,7 +74,7 @@ public class SearchWebActivity extends AppCompatActivity{
 		settings.setJavaScriptEnabled(true);
 		settings.setDomStorageEnabled(true);//适应Html5
 	}
-	//处理并消费掉该 Back 事件，防止一按返回就注销Activity
+	//处理并消费掉该 Back 事件，避免按一次返回就注销Activity
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if ((keyCode == KEYCODE_BACK) && webView.canGoBack()) {
 			webView.goBack();

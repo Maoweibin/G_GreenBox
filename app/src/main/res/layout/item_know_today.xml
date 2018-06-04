@@ -15,10 +15,12 @@
     android:layout_weight="0.5">
 
     <RelativeLayout
+        android:focusableInTouchMode="true"
+        android:clickable="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:background="#FFFFFF"
-
+        android:id="@+id/every"
         android:layout_height="wrap_content">
 
         <LinearLayout
@@ -47,9 +49,9 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:textColor="@color/black"
-                android:layout_marginLeft="10dp"
+                android:layout_marginLeft="1dp"
                 android:textSize="15sp"
-                android:text="幸运花"
+                android:text="每日一花"
                 android:layout_weight="33.71" />
 
         </LinearLayout>
@@ -57,7 +59,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="今日幸运花"
+            android:text="每天持续更新"
             android:textSize="10sp"
             android:layout_centerVertical="true"
             android:layout_alignLeft="@+id/linearLayout"
@@ -67,7 +69,7 @@
         <ImageView
             android:layout_width="100dp"
             android:layout_height="100dp"
-            android:src="@mipmap/facai_100x"
+            android:src="@mipmap/flower_everyday"
             android:layout_marginLeft="8dp"
             android:layout_marginStart="8dp"
             android:id="@+id/imageView"
@@ -80,7 +82,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="发财树"
+            android:text="每日专属"
             android:textSize="20sp"
             android:textColor="@color/main_my"
             android:id="@+id/tree"
@@ -104,47 +106,47 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-
             android:layout_weight="0.5">
+
             <RelativeLayout
+                android:focusableInTouchMode="true"
+                android:clickable="true"
                 android:layout_width="match_parent"
-
-                android:background="#ffffff"
-
-                android:layout_height="match_parent">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="星座幸运花"
-            android:textSize="10sp"
-            android:layout_above="@+id/fuguishu"
-            android:layout_alignLeft="@+id/fuguishu"
-            android:id="@+id/textView4" />
-                <ImageView
-                android:layout_width="100dp"
-                android:layout_height="100dp"
-                android:layout_marginLeft="16dp"
-                android:layout_marginStart="16dp"
-                android:scaleY="0.8"
-                android:src="@mipmap/shux100"
-                android:id="@+id/imageView3"
-                android:layout_alignParentBottom="true"
-            />
+                android:id="@+id/xingzuo"
+                android:layout_height="match_parent"
+                android:background="#ffffff">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/textView4"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="富贵树"
-                    android:id="@+id/fuguishu"
-                    android:textSize="20sp"
-                    android:textColor="@color/com_facebook_button_send_background_color"
-                    android:layout_marginBottom="30dp"
+                    android:layout_above="@+id/fuguishu"
+                    android:layout_alignLeft="@+id/fuguishu"
+                    android:text="星座幸运花"
+                    android:textSize="10sp"/>
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     android:layout_alignParentBottom="true"
+                    android:scaleY="0.8"
+                    android:src="@mipmap/shux100"
+                    />
+
+                <TextView
+                    android:id="@+id/fuguishu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginBottom="30dp"
                     android:layout_toRightOf="@+id/imageView3"
-                    android:layout_toEndOf="@+id/imageView3" />
+                    android:text="星座花"
+                    android:textColor="@color/com_facebook_button_send_background_color"
+                    android:textSize="20sp"/>
 
             </RelativeLayout>
 
-    </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 </LinearLayout>

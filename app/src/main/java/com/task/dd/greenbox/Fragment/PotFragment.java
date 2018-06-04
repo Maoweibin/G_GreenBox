@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -22,22 +24,21 @@ import com.task.dd.greenbox.Activity.AddPotActivity;
 import com.task.dd.greenbox.Activity.ControlActivity;
 import com.task.dd.greenbox.R;
 import com.task.dd.greenbox.adapter.PotAdapter;
-import com.task.dd.greenbox.asyntask.GetPotMessageAsyncTask;
 import com.task.dd.greenbox.bean.PotBean;
 import com.task.dd.greenbox.tool.FastBlur;
 import com.task.dd.greenbox.tool.GradientImageView;
+import com.task.dd.greenbox.tool.Util;
 import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import android.widget.AdapterView.OnItemClickListener;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -118,7 +119,7 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
        OkHttpClient client=new OkHttpClient();
        final Request request=new Request.Builder()
                //.url("http://srms.telecomlab.cn/ZZX/lihuas/index.php/home/wx/login?number=111111&password=1111")
-               .url("http://srms.telecomlab.cn/ZZX/lihuas/index.php/home/wx/search?id="+user_id)
+               .url("http://srms.telecomlab.cn/ZZX/flower/login/pot_info?id="+user_id)
                .get()
                .build();
        Call call =client.newCall(request);
@@ -130,7 +131,9 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
                getActivity().runOnUiThread(new Runnable() {
                    @Override
                    public void run() {
-                       Toast.makeText(getContext(),"网络问题",Toast.LENGTH_SHORT).show();
+                       Looper.prepare();
+                       Util.showToast(getContext(), "好像出错了~");
+                       Looper.loop();
                    }
                });
            }
@@ -138,17 +141,19 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
            @Override
            public void onResponse(Call call, Response response) throws IOException {
                String string =response.body().string();
-               //{"data":[{"id":"2","name":"花盆111","par_id":"27","model":"100001"},{"id":"3","name":"花盆","par_id":"27","model":"100002"}],"status":"1"}
+               //{"status":"1","message":"查询成功！","data":[{"id":"176","parent_id":"1","ip":"112.74.84.200","name":"草","uid":"123","switch":"01","project":null,"title":null,"alias":null,"item":"flower","content":null,"image":null,"adddate":null,"editdate":"2018-05-24 09:50:47","hit":"0","hot":"0","author":null,"ordering":"0","publish":"1","params":null},
                try {
                    JSONObject jsonObject=new JSONObject(string);
                    String result=jsonObject.getString("status");
-                   name_list=new ArrayList<>();
-                   id_list=new ArrayList<>();
                    if (result.equals("1")){
                        JSONArray dataJsonArray =jsonObject.getJSONArray("data");
+                       name_list=new ArrayList<>();
+                       id_list=new ArrayList<>();
                        for (int i = 0; i <dataJsonArray.length() ; i++) {
                            name_list.add(dataJsonArray.getJSONObject(i).getString("name"));
-                           id_list.add(dataJsonArray.getJSONObject(i).getString("model"));
+//                           Log.e("name", String.valueOf(name_list));
+                           id_list.add(dataJsonArray.getJSONObject(i).getString("uid"));
+//                           Log.e("id", String.valueOf(id_list));
                        }
 
                        PotBean potbean=new PotBean();
@@ -160,6 +165,7 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
                            public void run() {
 
                                adapter.refreshData(mpotBean);//想不到这个是在UI线程的
+                               Util.showToast(getContext(),"正在拉取用户数据...");
 
                            }
                        });
@@ -170,6 +176,9 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
 
                } catch (JSONException e) {
                    e.printStackTrace();
+                   Looper.prepare();
+                   Util.showToast(getContext(), "好像出错了~");
+                   Looper.loop();
                }
 
 
@@ -210,7 +219,7 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
         auto_image.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getContext(),"点击自动",Toast.LENGTH_LONG).show();
+                Util.showToast(getContext(),"自动");
             }
         });
 
@@ -279,19 +288,18 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
            String potName=mpotBean.getName_list().get(0);
 
            if (potName.equals("暂无花盆")){
-               Toast.makeText(getContext(),"请添加花盆",Toast.LENGTH_LONG).show();
+               Util.showToast(getContext(),"请添加花盆");
            }else {
+               Toast.makeText(getContext(), "正在拉取花盆数据...", Toast.LENGTH_SHORT).show();
                String PotID=mpotBean.getId_list().get(position-1);
                String pot_head_name=mpotBean.getName_list().get(position-1);
                Log.i("potname",pot_head_name);
                Intent i= new Intent(getActivity(),ControlActivity.class);
-               i.putExtra(POT_ID,PotID);
+               i.putExtra("PotID",PotID);
                i.putExtra("POT_HEAD_NAME",pot_head_name);
                startActivity(i);
            }
 
-       }else {
-           //点击的是listview 添加的头部
        }
         //Toast.makeText(getContext(),String.valueOf(id),Toast.LENGTH_LONG).show();
        // String PotID=mpotBean.getId_list().get(position-1);//减去1是为了去掉头部
@@ -303,7 +311,7 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
 
     @Override
     public void click(View v) {
-       // Toast.makeText(getContext(),"item被点击",Toast.LENGTH_LONG).show();
+//       Util.showToast(getContext(),"item被点击");
 
     }
 }

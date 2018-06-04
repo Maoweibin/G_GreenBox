@@ -85,6 +85,7 @@
         android:layout_weight="0.05">
 
         <LinearLayout
+            android:id="@+id/shuisheng"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="0.25"
@@ -102,11 +103,12 @@
                 android:textSize="14sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="水仙花卉"/>
+                android:text="水生花卉"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/caoben"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="0.25"
@@ -128,6 +130,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/muben"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="0.25"
@@ -149,6 +152,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/qiugen"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="0.25"
@@ -178,6 +182,7 @@
         android:layout_weight="0.05">
 
         <LinearLayout
+            android:id="@+id/lanke"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:gravity="center"
@@ -186,18 +191,19 @@
             <com.task.dd.greenbox.tool.GradientImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@mipmap/dipi"/>
+                android:src="@mipmap/lanke"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="地被植物"/>
+                android:text="兰科花卉"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/sugen"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="0.25"
@@ -218,6 +224,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/tengben"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:layout_weight="0.25"
@@ -226,18 +233,19 @@
             <com.task.dd.greenbox.tool.GradientImageView
                 android:layout_width="60dp"
                 android:layout_height="60dp"
-                android:src="@mipmap/zaolei"/>
+                android:src="@mipmap/tengben"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="藻类植物"/>
+                android:text="藤本花卉"/>
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/duorou"
             android:orientation="vertical"
             android:layout_width="0dp"
             android:gravity="center"
@@ -253,7 +261,7 @@
                 android:textSize="14sp"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/black"
-                android:text="多肉植物"/>
+                android:text="多肉花卉"/>
 
         </LinearLayout>
     </LinearLayout>

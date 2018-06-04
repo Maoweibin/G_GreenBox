@@ -12,6 +12,7 @@ public class Pot_Message {
     private String water_level;//水槽水位
     private String light;
     private String water;
+    private String url;
 
     public String getLight() {
         return light;
@@ -27,6 +28,14 @@ public class Pot_Message {
 
     public void setWater(String water) {
         this.water = water;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getUrl() {
+        return url;
     }
 
     public String getHumidity() {
@@ -54,7 +63,7 @@ public class Pot_Message {
     }
 
     public String getTemperature() {
-        return temperature;
+        return this.temperature;
     }
 
     public void setTemperature(String temperature) {
