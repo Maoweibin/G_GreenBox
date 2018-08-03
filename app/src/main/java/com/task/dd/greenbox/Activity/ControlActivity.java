@@ -38,7 +38,7 @@ import okhttp3.Response;
 public class ControlActivity extends Activity {
 	private ImageView imageView;//显示图片
 	private ImageView backImageView;//返回的IV
-
+	private ImageView refreshImageView;//刷新的IV
 	private ProgressBar pb_temperature;//温度高度条
 	private ProgressBar pb_sunshine;//光照高度条
 	private ProgressBar pb_humidity;//湿度高度条
@@ -48,8 +48,8 @@ public class ControlActivity extends Activity {
 	private GradientImageView iv_water_back;//水图标背景
 	private GradientImageView iv_sunshine;//阳光图片
 	private GradientImageView iv_sunshine_back;//阳光背景
-	private ImageView iv_recode;//自动图标
-	//	private ImageView iv_auto;//自动图标
+	private GradientImageView iv_cemera_back;//照相背景
+	private ImageView iv_photo;//自动图标
 	private TextView tv_sun;
 	private TextView tv_water;
 	private TextView tv_humidity;
@@ -67,6 +67,9 @@ public class ControlActivity extends Activity {
 	private String lightglobal = "";
 	private String light_first;
 	private String water_first;
+	private boolean isWatering = false;
+	private boolean isSunning = false;
+	private boolean isTaking = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +77,7 @@ public class ControlActivity extends Activity {
 		setContentView(R.layout.layout_control);
 		imageView = (ImageView) findViewById(R.id.iv_show);
 		backImageView = (ImageView) findViewById(R.id.iv_pot_back);//返回
-
+		refreshImageView = (ImageView) findViewById(R.id.iv_pot_refresh);//刷新
 		pb_temperature = (ProgressBar) findViewById(R.id.progressbar_temperature);
 		pb_sunshine = (ProgressBar) findViewById(R.id.progressbar_sun);
 		pb_humidity = (ProgressBar) findViewById(R.id.progressbar_humidity);
@@ -83,8 +86,9 @@ public class ControlActivity extends Activity {
 		iv_water = (GradientImageView) findViewById(R.id.iv_water_button);//水按钮
 		iv_water_back = (GradientImageView) findViewById(R.id.iv_water_back);//水背景
 		iv_sunshine_back = (GradientImageView) findViewById(R.id.iv_sunshine_back);//光照背景
+		iv_cemera_back = (GradientImageView) findViewById(R.id.iv_camera_back);
 		iv_sunshine = (GradientImageView) findViewById(R.id.iv_sun_button);//光照按钮
-		iv_recode = (ImageView) findViewById(R.id.iv_recode_button);
+		iv_photo = (ImageView) findViewById(R.id.iv_photo);
 //		iv_auto = (ImageView) findViewById(R.id.iv_auto_button);
 		tv_sun = (TextView) findViewById(R.id.tv_sun);
 		tv_temperature = (TextView) findViewById(R.id.tv_temperature);
@@ -105,18 +109,23 @@ public class ControlActivity extends Activity {
 		//获取花盆传感器的信息
 		getPotStatus();
 
-//		getPhoto();
-
 		setListener();//设置监听
 
 	}
-
 
 	private void setListener() {
 		backImageView.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				finish();//点击注销
+			}
+		});
+
+		refreshImageView.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				//点击刷新
+				getPotStatus();
 			}
 		});
 
@@ -129,15 +138,27 @@ public class ControlActivity extends Activity {
 					return;
 				}
 
+				light_first = pot_message.getLight();
+
+				if (isWatering){
+					Util.showToast(getApplicationContext(), "请勿频繁操作");
+					ControlActivity.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							iv_water_back.setImageDrawable(getResources().getDrawable(R.drawable.button_bg_normal));
+						}
+					});
+					return;
+				}
+				isWatering = true;
+
 				pot_message.setWater("1");
 				ControlActivity.this.runOnUiThread(new Runnable() {
 					@Override
 					public void run() {
-							iv_water_back.setImageDrawable(getResources().getDrawable(R.drawable.button_bg_focused));
+						iv_water_back.setImageDrawable(getResources().getDrawable(R.drawable.button_bg_focused));
 					}
 				});
-
-				light_first = pot_message.getLight();
 
 				switch_num = (pot_message.getLight() + pot_message.getWater());
 				Log.e("switch", switch_num);
@@ -169,7 +190,7 @@ public class ControlActivity extends Activity {
 
 							}
 						});
-
+						isWatering = false;
 					}
 
 					@Override
@@ -187,7 +208,7 @@ public class ControlActivity extends Activity {
 								ControlActivity.this.runOnUiThread(new Runnable() {
 									@Override
 									public void run() {
-											iv_water_back.setImageDrawable(getResources().getDrawable(R.drawable.button_bg_normal));
+										iv_water_back.setImageDrawable(getResources().getDrawable(R.drawable.button_bg_normal));
 									}
 								});
 							} else {
@@ -202,10 +223,11 @@ public class ControlActivity extends Activity {
 									}
 								});
 							}
-
+							isWatering = false;
 						} catch (JSONException e) {
 							e.printStackTrace();
-							Toast.makeText(getApplicationContext(), "好像出错了~", Toast.LENGTH_LONG).show();
+							isWatering = false;
+							Util.showToast(getApplicationContext(), "好像出错了~");
 						}
 
 					}
@@ -225,25 +247,47 @@ public class ControlActivity extends Activity {
 					return;
 				}
 
-				if (pot_message.getLight().equals("0")) {
-					light_first = "0";
+				light_first = pot_message.getLight();
+
+				if (isSunning){
+					Util.showToast(getApplicationContext(), "请勿频繁操作");
+					ControlActivity.this.runOnUiThread(new Runnable() {
+						@Override
+						public void run() {
+							if (light_first.equals("0")) {
+								iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_normal));
+							} else {
+								iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_focused));
+							}
+
+						}
+					});
+					return;
+				}
+				isSunning = true;
+
+				if (light_first.equals("0")) {
 					pot_message.setLight("1");
-					Log.e("Light", pot_message.getLight());
+//					Log.e("Light", pot_message.getLight());
 
 				} else {
-					light_first = "1";
 					pot_message.setLight("0");
-					Log.e("Light", pot_message.getLight());
+//					Log.e("Light", pot_message.getLight());
 
 				}
 				pot_message.setWater("0");
 
+				ControlActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
 						if (pot_message.getLight().equals("0")) {
 							iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_normal));
 						} else {
 							iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_focused));
 						}
 
+					}
+				});
 
 				switch_num = (pot_message.getLight() + pot_message.getWater());
 				Log.e("switch", switch_num);
@@ -258,24 +302,18 @@ public class ControlActivity extends Activity {
 					@Override
 					public void onFailure(Call call, IOException e) {
 						Log.i(TAG, "onFailure: " + e);
+						Util.showToast(getApplicationContext(), "开关失效，请检查网络");
+
+						pot_message.setLight(light_first);
+						pot_message.setWater("0");
+
 						ControlActivity.this.runOnUiThread(new Runnable() {
 							@Override
 							public void run() {
-								Util.showToast(getApplicationContext(), "开关失效，请检查网络");
-
-								pot_message.setLight(light_first);
-								pot_message.setWater("0");
-
-								ControlActivity.this.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										showSwitchMessage();
-									}
-								});
-
+								showSwitchMessage();
 							}
 						});
-
+						isSunning = false;
 					}
 
 					@Override
@@ -289,17 +327,6 @@ public class ControlActivity extends Activity {
 							if (result == 1) {
 								Util.showToast(getApplicationContext(), "灯光控制成功");
 
-								//下面通过这个方法在主线程更新UI
-								ControlActivity.this.runOnUiThread(new Runnable() {
-									@Override
-									public void run() {
-										if (pot_message.getLight().equals("0")) {
-											iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_normal));
-										} else {
-											iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_focused));
-										}
-									}
-								});
 							} else {
 								pot_message.setLight(light_first);
 								pot_message.setWater("0");
@@ -316,9 +343,10 @@ public class ControlActivity extends Activity {
 									}
 								});
 							}
-
+							isSunning = false;
 						} catch (JSONException e) {
 							e.printStackTrace();
+							isSunning = false;
 							Toast.makeText(getApplicationContext(), "好像出错了~", Toast.LENGTH_LONG).show();
 						}
 
@@ -330,33 +358,105 @@ public class ControlActivity extends Activity {
 
 		});
 
-		iv_recode.setOnClickListener(new View.OnClickListener() {
-
+		iv_photo.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Util.showToast(getApplicationContext(), "记录");
+				if (isTaking){
+					Util.showToast(getApplicationContext(), "请勿频繁操作");
+					return;
+				}
+				isTaking = true;
+
+				ControlActivity.this.runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						iv_cemera_back.setImageDrawable(getResources().getDrawable(R.drawable.button_camera_bg_focused));
+					}
+				});
+				OkHttpClient client = new OkHttpClient();
+				Request request = new Request.Builder()
+						.url("http://srms.telecomlab.cn/ZZX/flower/index/tpimage?uid=" + pot_id + "&switch=tp")
+						.get()
+						.build();
+				Call call = client.newCall(request);
+				call.enqueue(new Callback() {
+					@Override
+					public void onFailure(Call call, IOException e) {
+//						Util.showToast(getApplicationContext(), "拍摄失败，请打开花盆");
+						isTaking = false;
+						Toast.makeText(getApplicationContext(), "拍摄失败，检查网络", Toast.LENGTH_SHORT).show();
+						ControlActivity.this.runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
+								iv_cemera_back.setImageDrawable(getResources().getDrawable(R.drawable.button_camera_bg_normal));
+							}
+						});
+						isTaking = false;
+					}
+
+					@Override
+					public void onResponse(Call call, Response response) throws IOException {
+						//Response response = client.newCall(request).execute();
+						String jsonString = response.body().string();
+						PotMessageJson potJson = new PotMessageJson();
+						try {
+							JSONObject jsonObject = new JSONObject(jsonString);
+							int result = Integer.parseInt(jsonObject.getString("status"));
+							String message = jsonObject.getString("message");
+
+							if (result == 1) {
+								ControlActivity.this.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										iv_cemera_back.setImageDrawable(getResources().getDrawable(R.drawable.button_camera_bg_normal));
+									}
+								});
+
+								Util.showToast(getApplicationContext(), "拍摄完成");
+								loadImage();
+
+							}
+							else if (result == 0){
+								ControlActivity.this.runOnUiThread(new Runnable() {
+									@Override
+									public void run() {
+										iv_cemera_back.setImageDrawable(getResources().getDrawable(R.drawable.button_camera_bg_normal));
+									}
+								});
+								Util.showToast(getApplicationContext(),message);
+
+							}
+
+							isTaking = false;
+						} catch (JSONException e) {
+							e.printStackTrace();
+//							Util.showToast(getApplicationContext(), "拍摄失败，请打开花盆");
+							Toast.makeText(getApplicationContext(), "拍摄失败，请打开花盆", Toast.LENGTH_SHORT).show();
+							ControlActivity.this.runOnUiThread(new Runnable() {
+								@Override
+								public void run() {
+									iv_cemera_back.setImageDrawable(getResources().getDrawable(R.drawable.button_camera_bg_normal));
+								}
+							});
+							isTaking = false;
+						}
+					}
+
+				});
+				isTaking = false;
 			}
 
 		});
 
-//		iv_auto.setOnClickListener(new View.OnClickListener() {
-//
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//
-//				//下面通过这个方法在主线程更新UI
-//				ControlActivity.this.runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//						showMessage();
-//					}
-//				});
-//
-//			}
-//
-//		});
+		imageView.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (pot_message != null) {
+					loadImage();
+				}
+			}
+		});
 
 	}
 
@@ -405,105 +505,6 @@ public class ControlActivity extends Activity {
 	}
 
 
-	public void getPhoto() {
-		//不知道为什么使用Glide无法加载图片，该url下。
-		/*Glide.with(getApplicationContext())
-				.load("http://api.yeelink.net/v1.0/device/354593/sensor/400698/photo/content")
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                       // Log.d(TAG, "onException: " + e.toString()+"  model:"+model+" isFirstResource: "+isFirstResource);
-                        Util.showToast(getApplicationContext(),"加载失败~");
-                        imageView.setImageResource(R.mipmap.d);
-                        return false;
-                    }
-
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                       // Log.e(TAG, "isFromMemoryCache:"+isFromMemoryCache+"  model:"+model+" isFirstResource: "+isFirstResource);
-
-                        return false;
-
-                    }
-                })
-
-                .centerCrop()
-                .into(imageView);*/
-
-		OkHttpClient client = new OkHttpClient();
-		Request request = new Request.Builder()
-				.url("http://srms.telecomlab.cn/ZZX/flower/login/pot_one_info?uid=" + pot_id)
-				.get()
-				.build();
-		Call call = client.newCall(request);
-		call.enqueue(new Callback() {
-			@Override
-			public void onFailure(Call call, IOException e) {
-				ControlActivity.this.runOnUiThread(new Runnable() {
-					@Override
-					public void run() {
-						//网络图片请求成功，更新到主线程的ImageView
-						Toast.makeText(getApplicationContext(), "花盆图片获取失败，请检查网络", Toast.LENGTH_SHORT).show();
-					}
-				});
-			}
-
-			@Override
-			public void onResponse(Call call, Response response) throws IOException {
-				String jsonString = response.body().string();
-				PotMessageJson potJson = new PotMessageJson();
-				try {
-					pot_message = potJson.messagePull(jsonString);
-
-
-					//下面通过这个方法在主线程更新UI
-					ControlActivity.this.runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							showMessage();
-						}
-					});
-
-//					URL url = new URL(image_url);
-//					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//					final BufferedInputStream is = new BufferedInputStream(conn.getInputStream());
-//					final Bitmap bitmap = BitmapFactory.decodeStream(is);
-//
-//					ControlActivity.this.runOnUiThread(new Runnable() {
-//						@Override
-//						public void run() {
-//							imageView.setImageBitmap(bitmap);
-//						}
-//					});
-
-
-//					byte[] bytes = response.body().bytes();
-//					final Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-//					runOnUiThread(new Runnable() {
-//						@Override
-//						public void run() {
-//							//网络图片请求成功，更新到主线程的ImageView
-//							imageView.setImageBitmap(bmp);
-//						}
-//					});
-
-				} catch (JSONException e) {
-					e.printStackTrace();
-					Toast.makeText(getApplicationContext(), "花盆图片加载失败~", Toast.LENGTH_SHORT).show();
-				}
-
-			}
-		});
-
-		if (pot_message != null) {
-			Glide
-					.with(context)
-					.load(pot_message.getUrl())
-					.into(imageView);
-		}
-	}
-
-
 	private void showMessage() {
 
 		tv_temperature.setText(pot_message.getTemperature());
@@ -533,7 +534,7 @@ public class ControlActivity extends Activity {
 
 	}
 
-	private void showSwitchMessage(){
+	private void showSwitchMessage() {
 		if (pot_message.getLight().equals("0")) {
 			iv_sunshine_back.setImageDrawable(getResources().getDrawable(R.drawable.button_light_bg_normal));
 		} else {
@@ -546,4 +547,13 @@ public class ControlActivity extends Activity {
 			iv_water_back.setImageDrawable(getResources().getDrawable(R.drawable.button_bg_focused));
 		}
 	}
+
+	public void loadImage() {
+//		String url ="http://srms.telecomlab.cn/ZZX/flower/Public/share/images/uploads/1529462894.jpg";
+		String url = pot_message.getUrl();
+		Log.e("url",url);
+		System.out.print(url);
+		Glide.with(this).load(url).error(R.mipmap.photo_lost).into(imageView);
+	}
+
 }
