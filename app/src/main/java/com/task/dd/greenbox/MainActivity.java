@@ -24,7 +24,6 @@ import com.task.dd.greenbox.Fragment.PotFragment;
 import com.task.dd.greenbox.Fragment.SetFragment;
 import com.task.dd.greenbox.Fragment.TestFragment;
 import com.task.dd.greenbox.tool.Util;
-import com.uuzuche.lib_zxing.activity.CaptureActivity;
 import com.uuzuche.lib_zxing.activity.CodeUtils;
 import com.uuzuche.lib_zxing.activity.ZXingLibrary;
 
@@ -54,7 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RadioButton knowButton;
     private android.support.v7.widget.Toolbar toolbar;
     private ImageView searchImageView;
-    private ImageView scanImageView;
+
     private ImageView addImageview;
     private String id;
     private String userPhone;
@@ -92,15 +91,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, SearchWebActivity.class);
                 startActivity(intent);
-            }
-        });
-        scanImageView= (ImageView) findViewById(R.id.iv_scan);
-        scanImageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this, CaptureActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-
             }
         });
 

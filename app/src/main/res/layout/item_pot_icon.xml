@@ -204,13 +204,13 @@
                     android:layout_height="50dp"
                     android:src="@color/darkcyan"
                     android:clickable="true"
-                    android:id="@+id/iv_photo"
+                    android:id="@+id/iv_state"
                     />
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@mipmap/icon_photo"/>
+                    android:src="@mipmap/icon_state"/>
 
             </FrameLayout>
             <TextView

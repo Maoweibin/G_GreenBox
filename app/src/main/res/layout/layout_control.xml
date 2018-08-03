@@ -33,10 +33,11 @@
             android:textColor="#000000"
             android:textSize="20sp"/>
 
-        <TextView
-            android:id="@+id/pot_refresh"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
+        <ImageView
+            android:id="@+id/iv_pot_refresh"
+            android:layout_marginTop="5dp"
+            android:layout_width="40dp"
+            android:layout_height="30dp"
             android:layout_weight="0.1"
             android:scaleX="0.85"
             android:scaleY="0.85"
@@ -60,12 +61,12 @@
             android:layout_weight="0.5"
             android:layout_height="0dp">
             <ImageView
-                android:background="@mipmap/c"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_margin="15dp"
+                android:layout_margin="5dp"
                 android:id="@+id/iv_show"
-                android:scaleY="1.1"/>
+                android:scaleY="1.1"
+                android:background="@mipmap/photo_click"/>
 
         </LinearLayout>
 
@@ -395,17 +396,17 @@
                     android:layout_gravity="center"
                     android:src="#DCE7CA"/>
                 <com.task.dd.greenbox.tool.GradientImageView
+                    android:id="@+id/iv_camera_back"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="#BDDCA2"/>
+                    android:layout_gravity="center"/>
                 <ImageView
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:layout_gravity="center"
-                    android:id="@+id/iv_recode_button"
+                    android:id="@+id/iv_photo"
                     android:clickable="true"
-                    android:src="@mipmap/icon_recode"/>
+                    android:src="@mipmap/icon_photo"/>
 
             </FrameLayout>
         </LinearLayout>
@@ -448,7 +449,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:textSize="20sp"
-                android:text="记录"
+                android:text="拍摄"
                 android:gravity="center"
                 android:layout_weight="0.33"/>
 

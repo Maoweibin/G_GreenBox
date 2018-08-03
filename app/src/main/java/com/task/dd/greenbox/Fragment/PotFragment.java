@@ -1,11 +1,13 @@
 package com.task.dd.greenbox.Fragment;
 
+import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -52,140 +54,144 @@ import static com.task.dd.greenbox.MainActivity.REQUEST_CODE;
  * Created by dd on 2016/12/9.
  */
 
-public class PotFragment extends Fragment implements OnItemClickListener,PotAdapter.Callback {
+public class PotFragment extends Fragment implements OnItemClickListener, PotAdapter.Callback {
 
-    private ListView potListView;
-    private List<String> name_list;
-    private List<String> id_list;
-    private ImageView addImageview;
-    private TextView tv_tips;
-    private PotBean mpotBean=new PotBean();
-    private ImageView pot_head_back;//头部虚化的位置，当然以imageView来显示
-    private Bitmap bitmap;//头部虚化资源文件
-    private FastBlur fastBlur=new FastBlur();//头部虚化的方法文件
-    private GradientImageView auto_image;
-    private PotAdapter adapter;
-    private ProgressBar progressBar;
-    private LinearLayout linearLayout;
-    private static final String USER_ID="USER_ID";
-    private static final String POT_ID ="POT_ID";
-    private  String user_id;//用户id
-    private static final  String ID_STRING="id_string";
-    //尝试使用返回name_list而不是bean；思考如何实现点击修改昵称
+	private ListView potListView;
+	private List<String> name_list;
+	private List<String> id_list;
+	private ImageView addImageview;
+	private TextView tv_tips;
+	private PotBean mpotBean = new PotBean();
+	private ImageView pot_head_back;//头部虚化的位置，当然以imageView来显示
+	private Bitmap bitmap;//头部虚化资源文件
+	private FastBlur fastBlur = new FastBlur();//头部虚化的方法文件
+	private GradientImageView auto_image;
+	private PotAdapter adapter;
+	private ProgressBar progressBar;
+	private LinearLayout linearLayout;
+	private static final String USER_ID = "USER_ID";
+	private static final String POT_ID = "POT_ID";
+	private String user_id;//用户id
+	private static final String ID_STRING = "id_string";
+	//尝试使用返回name_list而不是bean；思考如何实现点击修改昵称
+
+	@Nullable
+	@Override
+	public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.fragmemt_pot, container, false);
+		potListView = (ListView) view.findViewById(R.id.lv_fragment_pot);
+		//tv_tips= (TextView) view.findViewById(R.id.tv_tips);
+		//progressBar= (ProgressBar) view.findViewById(R.id.progressbar_pot);
+		// linearLayout= (LinearLayout) view.findViewById(R.id.ll_pot_pb_pot);
+
+		ZXingLibrary.initDisplayOpinion(getContext());
+		addHeadView();
+		user_id = getActivity().getIntent().getExtras().getString(ID_STRING);
+
+		name_list = new ArrayList<>();
+		id_list = new ArrayList<>();
+		id_list.add("01");
+		name_list.add("暂无花盆");
+		mpotBean.setName_list(name_list);
+
+		adapter = new PotAdapter(getContext(), mpotBean, this);
+
+		potListView.setAdapter(adapter);
+		potListView.setOnItemClickListener(this);
+		getPotMessage();
+
+		addImageview = (ImageView) view.findViewById(R.id.iv_add);
+		addImageview.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+				//6.0以上都需要手动添加动态权限
+				ActivityCompat.requestPermissions(getActivity(),
+						new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+
+				//点击了添加按钮
+				Intent intent = new Intent(getActivity(), CaptureActivity.class);
+				startActivityForResult(intent, REQUEST_CODE);
+
+			}
+		});
 
 
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragmemt_pot,container,false);
-        potListView= (ListView) view.findViewById(R.id.lv_fragment_pot);
-        //tv_tips= (TextView) view.findViewById(R.id.tv_tips);
-        //progressBar= (ProgressBar) view.findViewById(R.id.progressbar_pot);
-       // linearLayout= (LinearLayout) view.findViewById(R.id.ll_pot_pb_pot);
+		return view;
+	}
 
-        ZXingLibrary.initDisplayOpinion(getContext());
-        addHeadView();
-        user_id=getActivity().getIntent().getExtras().getString(ID_STRING);
+	private void getPotMessage() {
 
-        name_list=new ArrayList<>();
-        id_list=new ArrayList<>();
-        id_list.add("01");
-        name_list.add("暂无花盆");
-        mpotBean.setName_list(name_list);
+		OkHttpClient client = new OkHttpClient();
+		final Request request = new Request.Builder()
+				//.url("http://srms.telecomlab.cn/ZZX/lihuas/index.php/home/wx/login?number=111111&password=1111")
+				.url("http://srms.telecomlab.cn/ZZX/flower/login/pot_info?id=" + user_id)
+				.get()
+				.build();
+		Call call = client.newCall(request);
 
-        adapter=new PotAdapter(getContext(),mpotBean,this);
+		call.enqueue(new Callback() {
+			@Override
+			public void onFailure(Call call, IOException e) {
 
-        potListView.setAdapter(adapter);
-        potListView.setOnItemClickListener(this);
-        getPotMessage();
+				getActivity().runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						Looper.prepare();
+						Util.showToast(getContext(), "好像出错了~");
+						Looper.loop();
+					}
+				});
+			}
 
-        addImageview= (ImageView) view.findViewById(R.id.iv_add);
-        addImageview.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //点击了添加按钮
-                Intent intent = new Intent(getActivity(), CaptureActivity.class);
-                startActivityForResult(intent, REQUEST_CODE);
-
-            }
-        });
-
-
-        return view;
-    }
-
-   private void getPotMessage() {
-
-       OkHttpClient client=new OkHttpClient();
-       final Request request=new Request.Builder()
-               //.url("http://srms.telecomlab.cn/ZZX/lihuas/index.php/home/wx/login?number=111111&password=1111")
-               .url("http://srms.telecomlab.cn/ZZX/flower/login/pot_info?id="+user_id)
-               .get()
-               .build();
-       Call call =client.newCall(request);
-
-       call.enqueue(new Callback() {
-           @Override
-           public void onFailure(Call call, IOException e) {
-
-               getActivity().runOnUiThread(new Runnable() {
-                   @Override
-                   public void run() {
-                       Looper.prepare();
-                       Util.showToast(getContext(), "好像出错了~");
-                       Looper.loop();
-                   }
-               });
-           }
-
-           @Override
-           public void onResponse(Call call, Response response) throws IOException {
-               String string =response.body().string();
-               //{"status":"1","message":"查询成功！","data":[{"id":"176","parent_id":"1","ip":"112.74.84.200","name":"草","uid":"123","switch":"01","project":null,"title":null,"alias":null,"item":"flower","content":null,"image":null,"adddate":null,"editdate":"2018-05-24 09:50:47","hit":"0","hot":"0","author":null,"ordering":"0","publish":"1","params":null},
-               try {
-                   JSONObject jsonObject=new JSONObject(string);
-                   String result=jsonObject.getString("status");
-                   if (result.equals("1")){
-                       JSONArray dataJsonArray =jsonObject.getJSONArray("data");
-                       name_list=new ArrayList<>();
-                       id_list=new ArrayList<>();
-                       for (int i = 0; i <dataJsonArray.length() ; i++) {
-                           name_list.add(dataJsonArray.getJSONObject(i).getString("name"));
+			@Override
+			public void onResponse(Call call, Response response) throws IOException {
+				String string = response.body().string();
+				//{"status":"1","message":"查询成功！","data":[{"id":"176","parent_id":"1","ip":"112.74.84.200","name":"草","uid":"123","switch":"01","project":null,"title":null,"alias":null,"item":"flower","content":null,"image":null,"adddate":null,"editdate":"2018-05-24 09:50:47","hit":"0","hot":"0","author":null,"ordering":"0","publish":"1","params":null},
+				try {
+					JSONObject jsonObject = new JSONObject(string);
+					String result = jsonObject.getString("status");
+					if (result.equals("1")) {
+						JSONArray dataJsonArray = jsonObject.getJSONArray("data");
+						name_list = new ArrayList<>();
+						id_list = new ArrayList<>();
+						for (int i = 0; i < dataJsonArray.length(); i++) {
+							name_list.add(dataJsonArray.getJSONObject(i).getString("name"));
 //                           Log.e("name", String.valueOf(name_list));
-                           id_list.add(dataJsonArray.getJSONObject(i).getString("uid"));
+							id_list.add(dataJsonArray.getJSONObject(i).getString("uid"));
 //                           Log.e("id", String.valueOf(id_list));
-                       }
+						}
 
-                       PotBean potbean=new PotBean();
-                       potbean.setName_list(name_list);
-                       potbean.setId_list(id_list);
-                       mpotBean=potbean;
-                       getActivity().runOnUiThread(new Runnable() {
-                           @Override
-                           public void run() {
+						PotBean potbean = new PotBean();
+						potbean.setName_list(name_list);
+						potbean.setId_list(id_list);
+						mpotBean = potbean;
+						getActivity().runOnUiThread(new Runnable() {
+							@Override
+							public void run() {
 
-                               adapter.refreshData(mpotBean);//想不到这个是在UI线程的
-                               Util.showToast(getContext(),"正在拉取用户数据...");
+								adapter.refreshData(mpotBean);//想不到这个是在UI线程的
+								Util.showToast(getContext(), "正在拉取用户数据...");
 
-                           }
-                       });
-                   }else {
+							}
+						});
+					} else {
 
-                       //没有数据，空处理
-                   }
+						//没有数据，空处理
+					}
 
-               } catch (JSONException e) {
-                   e.printStackTrace();
-                   Looper.prepare();
-                   Util.showToast(getContext(), "好像出错了~");
-                   Looper.loop();
-               }
+				} catch (JSONException e) {
+					e.printStackTrace();
+					Looper.prepare();
+					Util.showToast(getContext(), "好像出错了~");
+					Looper.loop();
+				}
 
 
-           }
-       });
-        /*GetPotMessageAsyncTask getPotMessageAsyncTask = new GetPotMessageAsyncTask(getContext(),potListView);
-        String getIdUrl = "https://api.fengqiaoju.com/v1/articles/update/?page=1";
+			}
+		});
+		/*GetPotMessageAsyncTask getPotMessageAsyncTask = new GetPotMessageAsyncTask(getContext(),potListView);
+		String getIdUrl = "https://api.fengqiaoju.com/v1/articles/update/?page=1";
         getPotMessageAsyncTask.execute(getIdUrl);
         getPotMessageAsyncTask.setFinishListener(new GetPotMessageAsyncTask.DataFinishListener() {
             @Override
@@ -201,117 +207,115 @@ public class PotFragment extends Fragment implements OnItemClickListener,PotAdap
             }
         });
 */
-    }
+	}
 
-    private void addHeadView() {
-        View view =View.inflate(getContext(),R.layout.item_pot_icon,null);
-        potListView.addHeaderView(view);
-        /////////////////////头部虚化/////////////////////////
-        pot_head_back= (ImageView) view.findViewById(R.id.pot_back);
-        bitmap= BitmapFactory.decodeResource(getResources(),R.mipmap.fojiateng);
-        view.post(new Runnable() {
-            @Override
-            public void run() {
-                fastBlur.blur(bitmap,pot_head_back);
-            }
-        });
-        auto_image= (GradientImageView) view.findViewById(R.id.iv_auto);
-        auto_image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Util.showToast(getContext(),"自动");
-            }
-        });
-
-
-    }
+	private void addHeadView() {
+		View view = View.inflate(getContext(), R.layout.item_pot_icon, null);
+		potListView.addHeaderView(view);
+		/////////////////////头部虚化/////////////////////////
+		pot_head_back = (ImageView) view.findViewById(R.id.pot_back);
+		bitmap = BitmapFactory.decodeResource(getResources(), R.mipmap.fojiateng);
+		view.post(new Runnable() {
+			@Override
+			public void run() {
+				fastBlur.blur(bitmap, pot_head_back);
+			}
+		});
+		auto_image = (GradientImageView) view.findViewById(R.id.iv_auto);
+		auto_image.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Util.showToast(getContext(), "自动");
+			}
+		});
 
 
+	}
 
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        /**
-         * 处理二维码扫描结果
-         */
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE) {
-            //处理扫描结果（在界面上显示）
-            if (null != data) {
-                Bundle bundle = data.getExtras();
-                if (bundle == null) {
-                    return;
-                }
-                if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
-                    String result = bundle.getString(CodeUtils.RESULT_STRING);
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		/**
+		 * 处理二维码扫描结果
+		 */
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE) {
+			//处理扫描结果（在界面上显示）
+			if (null != data) {
+				Bundle bundle = data.getExtras();
+				if (bundle == null) {
+					return;
+				}
+				if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_SUCCESS) {
+					String result = bundle.getString(CodeUtils.RESULT_STRING);
 
-                    //result 代表的是扫描的结果 ，再次应该直接异步然后起动线程
-                    //向自己搭建的服务器上传花盆的id,(用result组成一个url)。
-                    //启动一个Activity,该activity启动异步，加载的时候等待，完成后跳转到
-                    //先用一个天气的试一下
-                    boolean isNumber = true;
-                    int num=0;
-                    char[] ch=result.toCharArray();
-                    for (int i = 0; i <ch.length; i++) {
-                        isNumber=Character.isDigit(ch[i]);
-                        if (!isNumber){
-                            num++;
-                        }
-                    }
-                    if (num==0&ch.length==6){
-                        Intent i=new Intent(getContext(), AddPotActivity.class);
-                        i.putExtra(USER_ID,user_id);
-                        i.putExtra(POT_ID,result);
-                        startActivity(i);
-
-
-                    }else {
-                        Toast.makeText(getContext(), "不是合法的注册二维码", Toast.LENGTH_LONG).show();
-                    }
+					//result 代表的是扫描的结果 ，再次应该直接异步然后起动线程
+					//向自己搭建的服务器上传花盆的id,(用result组成一个url)。
+					//启动一个Activity,该activity启动异步，加载的时候等待，完成后跳转到
+					//先用一个天气的试一下
+					boolean isNumber = true;
+					int num = 0;
+					char[] ch = result.toCharArray();
+					for (int i = 0; i < ch.length; i++) {
+						isNumber = Character.isDigit(ch[i]);
+						if (!isNumber) {
+							num++;
+						}
+					}
+					if (num == 0 & ch.length == 6) {
+						Intent i = new Intent(getContext(), AddPotActivity.class);
+						i.putExtra(USER_ID, user_id);
+						i.putExtra(POT_ID, result);
+						startActivity(i);
 
 
+					} else {
+						Toast.makeText(getContext(), "不是合法的注册二维码", Toast.LENGTH_LONG).show();
+					}
 
-                } else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
-                    Toast.makeText(getContext(), "解析二维码失败，检查网络", Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //向服务器提交该用户的花盆，服务器返回花盆的id
-        Log.i("ITEM_P", String.valueOf(position));
-        Log.i("ITEM_ID", String.valueOf(id));
-       if (position!=0){
-           //因为增加了头部所以写了这while
-           String potName=mpotBean.getName_list().get(0);
+				} else if (bundle.getInt(CodeUtils.RESULT_TYPE) == CodeUtils.RESULT_FAILED) {
+					Toast.makeText(getContext(), "解析二维码失败，检查网络", Toast.LENGTH_LONG).show();
+				}
+			}
+		}
+	}
 
-           if (potName.equals("暂无花盆")){
-               Util.showToast(getContext(),"请添加花盆");
-           }else {
-               Toast.makeText(getContext(), "正在拉取花盆数据...", Toast.LENGTH_SHORT).show();
-               String PotID=mpotBean.getId_list().get(position-1);
-               String pot_head_name=mpotBean.getName_list().get(position-1);
-               Log.i("potname",pot_head_name);
-               Intent i= new Intent(getActivity(),ControlActivity.class);
-               i.putExtra("PotID",PotID);
-               i.putExtra("POT_HEAD_NAME",pot_head_name);
-               startActivity(i);
-           }
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		//向服务器提交该用户的花盆，服务器返回花盆的id
+		Log.i("ITEM_P", String.valueOf(position));
+		Log.i("ITEM_ID", String.valueOf(id));
+		if (position != 0) {
+			//因为增加了头部所以写了这while
+			String potName = mpotBean.getName_list().get(0);
 
-       }
-        //Toast.makeText(getContext(),String.valueOf(id),Toast.LENGTH_LONG).show();
-       // String PotID=mpotBean.getId_list().get(position-1);//减去1是为了去掉头部
-        //Toast.makeText(getContext(),"item被点击第"+position,Toast.LENGTH_LONG).show();
+			if (potName.equals("暂无花盆")) {
+				Util.showToast(getContext(), "请添加花盆");
+			} else {
+				Toast.makeText(getContext(), "正在拉取花盆数据...", Toast.LENGTH_SHORT).show();
+				String PotID = mpotBean.getId_list().get(position - 1);
+				String pot_head_name = mpotBean.getName_list().get(position - 1);
+				Log.i("potname", pot_head_name);
+				Intent i = new Intent(getActivity(), ControlActivity.class);
+				i.putExtra("PotID", PotID);
+				i.putExtra("POT_HEAD_NAME", pot_head_name);
+				startActivity(i);
+			}
 
-      //  i.putExtra(POT_ID,PotID);
-       // startActivity(i);
-    }
+		}
+		//Toast.makeText(getContext(),String.valueOf(id),Toast.LENGTH_LONG).show();
+		// String PotID=mpotBean.getId_list().get(position-1);//减去1是为了去掉头部
+		//Toast.makeText(getContext(),"item被点击第"+position,Toast.LENGTH_LONG).show();
 
-    @Override
-    public void click(View v) {
+		//  i.putExtra(POT_ID,PotID);
+		// startActivity(i);
+	}
+
+	@Override
+	public void click(View v) {
 //       Util.showToast(getContext(),"item被点击");
 
-    }
+	}
+
 }
