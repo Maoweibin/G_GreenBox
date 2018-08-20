@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import com.mob.MobSDK;
 import com.task.dd.greenbox.MainActivity;
@@ -78,7 +79,7 @@ public class PhoneLoginActivity extends AppCompatActivity {
 								int result = Integer.parseInt(jsonObject.getString("status"));
 								if (result == 1) {
 									Looper.prepare();
-									Util.showToast(getApplicationContext(), "手机号已注册，直接登录");
+									Toast.makeText(getApplicationContext(),"手机已注册，直接登录",Toast.LENGTH_SHORT);
 									Intent i = newIntent(PhoneLoginActivity.this, MainActivity.class, phone);
 									startActivity(i);
 									finish();
